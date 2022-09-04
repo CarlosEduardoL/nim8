@@ -1,3 +1,8 @@
 nimcache/
 nimblecache/
 htmldocs/
+nim8
+nim8.exe
+SDL2.dll
+.vscode/
+roms/

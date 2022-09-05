@@ -1,7 +1,7 @@
 import sdl2_nim/sdl
 import strformat, os
 import cpu8
-from input8 import manageEvents
+from input8 import manageEvents, running
 import memory8
 
 # Convert a Chip-8 pixel to a square of size WindowScale
@@ -18,7 +18,7 @@ proc draw(renderer: Renderer) =
   checkSDL0 renderer.renderClear()
   checkSDL0 renderer.setRenderDrawColor(255, 196, 0, 0xFF)
 
-  for idx in 0..<(ScreenSize.w*ScreenSize.h):
+  for idx in 0..<GFXMemorySize:
     if memory[idx.GFXAddress]:
       let x = (idx mod ScreenSize.w) * WindowScale
       let y = (idx div ScreenSize.w) * WindowScale
@@ -40,9 +40,12 @@ when isMainModule:
   var renderer = createRenderer(window, -1, RENDERER_ACCELERATED)
   
   # GameLoop
-  while true:
+  while running:
     # is draw flag is true draw the gfx buffer on the window
     if drawFlag: draw renderer
     manageEvents()
     cpuCycle()
     delay 1000 div 60
+
+  renderer.destroyRenderer()
+  window.destroyWindow()

@@ -12,6 +12,7 @@ Basic Chip-8 Emulator based on [this guide](https://multigesture.net/articles/ho
 ## TODO
 
 - [ ]  Implement Sound
+- [ ]  Implement better timer
 - [ ]  Improve Case Statement (It's really too big)
 - [ ]  Manage Carry flag
 - [ ]  Implement super Chip-8 Opcodes and extended memory layout 

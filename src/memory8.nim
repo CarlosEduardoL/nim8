@@ -6,7 +6,8 @@ const StackSize = 0x100
 const RegistersCount = 16
 # Original CHIP-8 Display resolution is 64×32 pixels, and color is monochrome
 const ScreenSize* = (w: 64, h: 32)
-#
+const GFXMemorySize* = ScreenSize.w * ScreenSize.h
+# FontSet
 const FontSet: array[0..79, uint8] = [ 
   0xF0'u8, 0x90, 0x90, 0x90, 0xF0, # 0
   0x20'u8, 0x60, 0x20, 0x20, 0x70, # 1
@@ -28,7 +29,7 @@ const FontSet: array[0..79, uint8] = [
 type
   MemoryAddress* = range[0..MemorySize]
   RegisterIndex* = range[0..RegistersCount]
-  GFXAddress* = range[0..ScreenSize.w * ScreenSize.h]
+  GFXAddress* = range[0..GFXMemorySize]
   Opcode* = uint16
 
 # All of the supported programs will start at memory location 0x200
@@ -47,7 +48,7 @@ type
     ram: array[MemorySize, uint8]
     stack: array[StackSize, MemoryAddress]
     registers: array[RegistersCount, uint8]
-    gfxMemory: array[ScreenSize.w * ScreenSize.h, bool]
+    gfxMemory: array[GFXMemorySize, bool]
 
     addressRegister: MemoryAddress # It's really 12 bits but there is not a 12 bits type. <- I
     pc: MemoryAddress # Program Counter

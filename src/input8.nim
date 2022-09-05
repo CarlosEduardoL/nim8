@@ -1,5 +1,7 @@
 import sdl2_nim/sdl
 
+var running* = true
+
 # Input is done with a hex keyboard that has 16 keys ranging 0 to F
 const KeyCount = 16
 
@@ -17,8 +19,9 @@ proc manageEvents*() =
   var event: Event
   while pollEvent(event.addr) != 0:
     case event.kind:
-    of QUIT: quit 0
+    of QUIT: running = false
     of KEYDOWN, KEYUP:
+      if event.key.keysym.sym == K_ESCAPE: running = false
       for idx in 0..<KeyMap.len:
         if KeyMap[idx] == event.key.keysym.sym: keys[idx] = event.kind == KEYDOWN
     else: discard

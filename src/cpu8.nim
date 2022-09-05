@@ -26,7 +26,7 @@ proc getAddress(opcode: Opcode): MemoryAddress = opcode and 0x0FFF
 
 proc getNN(opcode: Opcode): uint8 = (opcode and 0x00FF).uint8
 
-proc invalid(opcode: Opcode) =
+proc invalid(opcode: Opcode) {.inline, noreturn.} =
   stderr.writeLine fmt"[FATAL] invalid opcode {opcode.toHex}"
   quit 1
 

@@ -8,7 +8,7 @@ import memory8
 const WindowScale = 10
 
 # Simplifies SDL Error Checking
-proc checkSDL0(errorCode: int) =
+proc checkSDL0(errorCode: int) {.inline.} =
   if errorCode != 0:
     stderr.writeLine(fmt"[FATAL] {sdl.getError()}")
     quit 1

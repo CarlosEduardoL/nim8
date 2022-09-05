@@ -58,7 +58,8 @@ proc clearGfxBuffer*(m: var Memory) =
   for idx in 0..<m.gfxMemory.len: m.gfxMemory[idx] = false
 
 proc newMemory*(): Memory =
-  return Memory(addressRegister: MemoryAddress.low, pc: ProgramStartPoint)
+  result = Memory(addressRegister: MemoryAddress.low, pc: ProgramStartPoint)
+  result.ram[0..<FontSet.len] = FontSet
 
 proc `[]`*(m: var Memory, idx: MemoryAddress): var uint8 = m.ram[idx]
 proc `[]`*(m: var Memory, idx: RegisterIndex): var uint8 = m.registers[idx]

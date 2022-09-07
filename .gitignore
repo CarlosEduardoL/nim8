@@ -1,8 +1,15 @@
+/.import
+/_dlls
+/nakefile
+/src/godotapi
+/logs
+nimcache
+.nimcache
 nimcache/
 nimblecache/
 htmldocs/
 nim8
-nim8.exe
-SDL2.dll
+*.exe
 .vscode/
 roms/
+src/vc140.pdb

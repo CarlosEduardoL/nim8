@@ -2,7 +2,7 @@
 
 A Chip-8 Emulator written in [Nim](https://nim-lang.org)
 
-Basic Chip-8 Emulator based on [this guide](https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) and using [DSL2](https://wiki.libsdl.org/Introduction) for the graphics
+Basic Chip-8 Emulator based on [this guide](https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) and using [godot](https://godotengine.org) with [godot-nim](https://github.com/pragmagic/godot-nim) for the graphics
 
 ## Interesting links
 
@@ -11,26 +11,26 @@ Basic Chip-8 Emulator based on [this guide](https://multigesture.net/articles/ho
 
 ## TODO
 
-- [ ]  Implement Sound
-- [ ]  Implement better timer
+- [x]  Implement Sound
+- [x]  Implement better timer
 - [ ]  Improve Case Statement (It's really too big)
 - [ ]  Manage Carry flag
-- [ ]  Implement super Chip-8 Opcodes and extended memory layout 
+- [ ]  Implement super Chip-8 Opcodes and extended memory layout
 
 ## Build instructions:
 
-- ### Download [Nim](https://nim-lang.org)
-  - On windows you can use scoop or any other package manager
-  - On unix systems use [choosenim](https://github.com/dom96/choosenim)
-- ### Download the dependencies using nimble: ```nimble install```
-- ### Generate the exe using nimble: ```nimble build```
-- ### Finally put the executable next to the SDL2.dll on Windows or install SDL2 on your system using your distribution package manager
+1. ### Download [Nim](https://nim-lang.org)
+     - #### On windows you can use scoop or any other package manager
+     - #### On unix systems use [choosenim](https://github.com/dom96/choosenim)
+2. ### Install [nake](https://github.com/fowlmouth/nake): `nimble install nake -n`.
+3. ### Ensure `~/.nimble/bin` is in your PATH (On Windows: `C:\Users\<your_username>\.nimble\bin`).
+4. ### Set `GODOT_BIN` environment varible to point to Godot executable (requires Godot 3.0 changeset [b759d14](https://github.com/godotengine/godot/commit/b759d1416f574e5b642413edd623b04f2a1d20ad) or newer).
+5. ### Install godot-nim: `nimble install godot`
+6. ### Run `nake build`
 
 ## Run Instructions
 
-```shell
-./nim8 /path/to/rom
-```
+- ### Press play on godot
 
 ## Keymap
 

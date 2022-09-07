@@ -4,22 +4,19 @@ import times, math
 const MustTake*: float64 = 1'f64/60'f64
 
 type Timer* = object
-  startTime: float64
-  debt: float64
+  acc: float64
+  paused: bool
 
-proc initTimer*(): Timer =
-  result.startTime = cpuTime()
+proc pulse*(t: var Timer, delta: float64): bool =
+  if t.paused : return false
+  t.acc += delta
+  if t.acc >= MustTake:
+    t.acc -= MustTake
+    return true
+  return false
 
-proc getDelay*(t: var Timer): int =
-  let elapsed = cpuTime() - t.startTime
-  t.startTime = cpuTime()
-  if elapsed > MustTake:
-    t.debt = elapsed - MustTake
-    return 0
-  let delay = MustTake - elapsed
-  if delay >= t.debt:
-    t.debt = 0
-    return ((delay - t.debt) * 1000).round().int
-  else:
-    t.debt -= delay
-    return 0
+proc pause*(t: var Timer) =
+  t.paused = true
+
+proc unpause*(t: var Timer) =
+  t.paused = false

@@ -1,3 +1,5 @@
+import godot
+
 # Chip-8 has 4KB memory frame
 const MemorySize = 0x1000
 # Stack Size is >= 48B
@@ -8,7 +10,7 @@ const RegistersCount = 16
 const ScreenSize* = (w: 64, h: 32)
 const GFXMemorySize* = ScreenSize.w * ScreenSize.h
 # FontSet
-const FontSet: array[0..79, uint8] = [ 
+const FontSet: array[0..79, uint8] = [
   0xF0'u8, 0x90, 0x90, 0x90, 0xF0, # 0
   0x20'u8, 0x60, 0x20, 0x20, 0x70, # 1
   0xF0'u8, 0x10, 0xF0, 0x80, 0xF0, # 2
@@ -27,8 +29,8 @@ const FontSet: array[0..79, uint8] = [
   0xF0'u8, 0x80, 0xF0, 0x80, 0x80] # F
 
 type
-  MemoryAddress* = range[0..MemorySize]
-  RegisterIndex* = range[0..RegistersCount]
+  MemoryAddress* = range[0..MemorySize-1]
+  RegisterIndex* = range[0..RegistersCount-1]
   GFXAddress* = range[0..GFXMemorySize]
   Opcode* = uint16
 
@@ -42,10 +44,11 @@ proc `+`*[I: MemoryAddress|RegisterIndex|GFXAddress, V: SomeInteger](i: I, v: V)
 proc `+`*[I: MemoryAddress|RegisterIndex|GFXAddress, V: SomeInteger](v: V, i: I): I = i + v
 
 # Encapsulate memory access to avoid wrong access.
-type 
+type
   Memory* = ref MemoryObj
   MemoryObj = object
     ram: array[MemorySize, uint8]
+    keys*: array[16, bool]
     stack: array[StackSize, MemoryAddress]
     registers: array[RegistersCount, uint8]
     gfxMemory: array[GFXMemorySize, bool]
@@ -66,26 +69,26 @@ proc `[]`*(m: var Memory, idx: MemoryAddress): var uint8 = m.ram[idx]
 proc `[]`*(m: var Memory, idx: RegisterIndex): var uint8 = m.registers[idx]
 proc `[]`*(m: var Memory, idx: GFXAddress): var bool = m.gfxMemory[idx]
 
-proc `[]`*(m: var Memory, idx: HSlice[MemoryAddress, MemoryAddress]): seq[uint8] = m.ram[idx]
-proc `[]`*(m: var Memory, idx: HSlice[RegisterIndex,RegisterIndex]): seq[uint8] = m.registers[idx]
-proc `[]`*(m: var Memory, idx: HSlice[GFXAddress,GFXAddress]): seq[bool] = m.gfxMemory[idx]
+proc `[]`*(m: Memory, idx: HSlice[MemoryAddress, MemoryAddress]): seq[uint8] = m.ram[idx]
+proc `[]`*(m: Memory, idx: HSlice[RegisterIndex,RegisterIndex]): seq[uint8] = m.registers[idx]
+proc `[]`*(m: Memory, idx: HSlice[GFXAddress,GFXAddress]): seq[bool] = m.gfxMemory[idx]
 
-proc `[]=`*(m: var Memory, idx: MemoryAddress, data: openArray[uint8]) = 
+proc `[]=`*(m: var Memory, idx: MemoryAddress, data: openArray[uint8]) =
   m.ram[idx.int..<idx+data.len] = data
-proc `[]=`*(m: var Memory, idx: RegisterIndex, data: openArray[uint8]) = 
+proc `[]=`*(m: var Memory, idx: RegisterIndex, data: openArray[uint8]) =
   m.registers[idx.int..<idx+data.len] = data
-proc `[]=`*(m: var Memory, idx: GFXAddress, data: openArray[bool]) = 
+proc `[]=`*(m: var Memory, idx: GFXAddress, data: openArray[bool]) =
   m.gfxMemory[idx.int..<idx+data.len] = data
 
-proc `[]=`*(m: var Memory, idx: MemoryAddress, data: uint8) = 
+proc `[]=`*(m: var Memory, idx: MemoryAddress, data: uint8) =
   m.ram[idx] = data
-proc `[]=`*(m: var Memory, idx: RegisterIndex, data: uint8) = 
+proc `[]=`*(m: var Memory, idx: RegisterIndex, data: uint8) =
   m.registers[idx] = data
-proc `[]=`*(m: var Memory, idx: GFXAddress, data: bool) = 
+proc `[]=`*(m: var Memory, idx: GFXAddress, data: bool) =
   m.gfxMemory[idx] = data
 
 # Get Opcode
-proc fetch*(m: var Memory): Opcode = 
+proc fetch*(m: var Memory): Opcode =
   result = (Opcode(m[m.pc]) shl 8) or (m[m.pc + 1'u])
   inc(m.pc, 2)
 
@@ -102,7 +105,7 @@ proc skip*(m: var Memory) = inc(m.pc, 2)
 # Pop Stack
 proc pop*(m: var Memory) =
   if m.stackPointer == 0:
-    stderr.writeLine "[FATAL] Cannot return on an empty stack"
+    printError "[FATAL] Cannot return on an empty stack"
     quit 1
   m.pc = m.stack[m.stackPointer - 1]
   dec(m.stackPointer)

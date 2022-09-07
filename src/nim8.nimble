@@ -1,14 +1,9 @@
-# Package
-
-version       = "0.1.1"
+version       = "0.2.0"
 author        = "Carlos Eduardo Lizalda Valencia"
 description   = "A Chip-8 Emulator"
 license       = "MIT"
-srcDir        = "src"
-bin           = @["nim8"]
-
 
 # Dependencies
 
 requires "nim >= 1.6.6"
-requires "sdl2_nim"
+requires "godot >= 0.8.0"

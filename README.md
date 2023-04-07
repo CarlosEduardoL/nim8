@@ -1,8 +1,6 @@
 # nim8
 
-A Chip-8 Emulator written in [Nim](https://nim-lang.org)
-
-Basic Chip-8 Emulator based on [this guide](https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) and using [godot](https://godotengine.org) with [godot-nim](https://github.com/pragmagic/godot-nim) for the graphics
+A Chip-8 Emulator written in [Nim](https://nim-lang.org) programming language. It uses Godot with [godot-nim](https://github.com/pragmagic/godot-nim) for the graphics. The emulator is based on this [this guide](https://multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/) and implements most of the Chip-8 Design Specification.
 
 ## Interesting links
 
